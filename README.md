@@ -13,6 +13,18 @@ A macOS menu bar app that brings Google Critique's "attention set" to GitHub PRs
   <img alt="The dashboard with a PR's review open beside it, showing the changes since your last review and a comment thread waiting on you" src="docs/screenshots/review-light.png">
 </picture>
 
+## Try it
+
+See it with made-up PRs before setting anything up. No GitHub token needed (requires Node 22+):
+
+```bash
+npm install
+npm run demo:app    # the menu bar app and dashboard
+npm run demo        # or just the dashboard, in your browser
+```
+
+The demo runs on a fake GitHub with sample data, on port 7879, so it doesn't touch a real Critique if you have one running.
+
 ## Install
 
 Critique isn't distributed as a download yet, so build it from source (needs Node 22+):
@@ -52,7 +64,7 @@ npm run app:dev     # runs the desktop app without packaging
 npm test
 ```
 
-To try it without a GitHub token, `npm run demo` serves made-up PRs from a fake GitHub (`demo/`) on port 7879, and `npm run demo:app` runs the desktop app on them. `npm run screenshots` regenerates the README screenshots from the same data.
+The demo's fake GitHub and sample PRs are in `demo/`. `npm run screenshots` regenerates the README's app screenshots from them.
 
 In a browser tab, notifications are browser notifications, shown while a Critique tab is open. The desktop app uses a server already running on the same port if there is one, so you can keep `npm start` running while you use it.
 
