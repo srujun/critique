@@ -30,7 +30,7 @@ function unifiedPatch(before, after) {
   }
 }
 
-export function createFakeGitHub(now = Date.now()) {
+export function createFakeGitHub(realFetch, now = Date.now()) {
   const prs = scenario(now);
   const byKey = new Map(prs.map((pr) => [`${pr.repo}#${pr.number}`, pr]));
   const url = (pr) => `https://github.com/${pr.repo}/pull/${pr.number}`;
@@ -179,7 +179,8 @@ export function createFakeGitHub(now = Date.now()) {
 
   return async function fakeFetch(input, init = {}) {
     const target = new URL(typeof input === 'string' ? input : input.url);
-    if (target.hostname !== 'api.github.com') throw new Error(`demo: unexpected request to ${target.hostname}`);
+    // Anything else (the desktop app talking to the local server) goes out as usual.
+    if (target.hostname !== 'api.github.com') return realFetch(input, init);
     if (target.pathname === '/graphql') return json({ data: graphql(JSON.parse(init.body)) });
     return rest(target.pathname, target.searchParams);
   };

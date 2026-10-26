@@ -12,6 +12,6 @@ import { createFakeGitHub } from './fake-github.js';
 process.env.CRITIQUE_DEMO = '1';
 process.env.CRITIQUE_HOME ||= mkdtempSync(join(tmpdir(), 'critique-demo-'));
 process.env.PORT ||= '7879';
-globalThis.fetch = createFakeGitHub();
+globalThis.fetch = createFakeGitHub(globalThis.fetch);
 
 await import('../server.js');

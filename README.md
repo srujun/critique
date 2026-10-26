@@ -6,6 +6,8 @@ A macOS menu bar app that brings Google Critique's "attention set" to GitHub PRs
 - **Dashboard:** every PR you're involved in, grouped by whose turn it is, including what changed since your last review.
 - **Review page:** the PR's diff (the whole PR, changes since your review, or any two versions) with GitHub's comment threads inline and its conversation timeline.
 
+<img alt="Critique's menu bar menu, listing the PRs that need you and why" src="docs/screenshots/menu.png" width="460">
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/review-dark.png">
   <img alt="The dashboard with a PR's review open beside it, showing the changes since your last review and a comment thread waiting on you" src="docs/screenshots/review-light.png">
