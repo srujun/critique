@@ -1,0 +1,59 @@
+{
+  "name": "critique",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Critique-style attention-set dashboard for GitHub PRs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "open": "node server.js --open",
+    "build": "node scripts/build.js",
+    "prestart": "npm run build --silent",
+    "preopen": "npm run build --silent",
+    "set-token": "node scripts/set-token.js",
+    "test": "vitest run",
+    "app:dev": "npm run build --silent && electron .",
+    "app": "npm run build --silent && node scripts/make-icons.js && electron-builder --mac dir && codesign --force --deep --sign - dist/mac-arm64/Critique.app"
+  },
+  "devDependencies": {
+    "@pierre/diffs": "1.5.2",
+    "electron": "44.7.0",
+    "electron-builder": "26.17.0",
+    "esbuild": "0.27.0",
+    "vitest": "^3.2.4"
+  },
+  "main": "desktop/main.js",
+  "build": {
+    "appId": "dev.local.critique",
+    "productName": "Critique",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "package.json",
+      "server.js",
+      "lib/**/*",
+      "public/**/*",
+      "desktop/**/*"
+    ],
+    "mac": {
+      "target": [
+        "dir"
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "desktop/assets/icon.png",
+      "identity": null
+    },
+    "protocols": [
+      {
+        "name": "Critique",
+        "schemes": [
+          "critique"
+        ]
+      }
+    ]
+  }
+}

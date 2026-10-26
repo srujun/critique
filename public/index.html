@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Critique</title>
+    <link rel="icon" id="favicon" href="data:," />
+    <script>
+      // Apply the saved theme before first paint (see theme.js).
+      try {
+        const t = JSON.parse(localStorage.getItem('critique.theme'));
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Critique</h1>
+      <span id="whoami" class="muted"></span>
+      <span class="spacer"></span>
+      <span id="dashboard-controls" class="controls">
+        <input id="search" type="search" placeholder="Filter (title, repo, author, reviewer)" autocomplete="off" />
+        <label class="toggle"><input id="group-by-repo" type="checkbox" /> Group by repo</label>
+        <button id="refresh">Refresh</button>
+      </span>
+      <a id="nav" class="button" href="#settings">Settings</a>
+      <span id="theme-slot"></span>
+      <button id="help-btn" title="How to use Critique (?)" aria-label="Help">?</button>
+    </header>
+    <main id="app"><p class="muted">Loading…</p></main>
+
+    <aside id="review-panel" class="review-panel" hidden aria-label="PR review">
+      <div id="review-panel-resize" class="panel-resize" title="Drag to resize"></div>
+      <div class="panel-bar">
+        <span id="review-panel-title" class="panel-title"></span>
+        <a id="review-panel-github" class="button" target="_blank" rel="noopener">GitHub</a>
+        <a id="review-panel-newtab" class="button" target="_blank" rel="noopener" title="Open this review in its own tab">New tab ↗</a>
+        <button id="review-panel-close" title="Close (Esc)" aria-label="Close review">✕</button>
+      </div>
+      <iframe id="review-frame" title="PR review" src="about:blank"></iframe>
+    </aside>
+
+    <dialog id="help" aria-labelledby="help-title">
+      <div class="help-head">
+        <h2 id="help-title">How to use Critique</h2>
+        <button class="icon" id="help-close" aria-label="Close">✕</button>
+      </div>
+
+      <p>Critique tracks whose turn it is on every open PR you're involved in, like Google's attention set.</p>
+
+      <h3>Reading the dashboard</h3>
+      <ul>
+        <li><b>Needs your attention</b> means it's your move. <b>Waiting on others</b> means it's someone else's.</li>
+        <li>
+          Dot color: <span class="dot inline red unseen"></span> your turn,
+          <span class="dot inline yellow unseen"></span> your turn soon (a reviewer's comment is still in its debounce
+          window), <span class="dot inline green unseen"></span> not your turn.
+        </li>
+        <li>A filled dot means activity you haven't opened yet. A hollow one means you've opened the PR since.</li>
+        <li>
+          Reviewer names are colored by their review: <span class="reviewer approved">approved</span>,
+          <span class="reviewer changes_requested">changes requested</span>,
+          <span class="reviewer commented">commented</span>, <span class="reviewer pending">pending</span>.
+          <b>Bold</b> means it's that person's turn.
+        </li>
+        <li>
+          The badge says what's next. For reviews: <i>New</i>, <i>Updated</i> (new commits or replies since your review; follow the blue link to see only what changed),
+          <i>Re-review</i>. For your PRs: <i>Fix</i>, <i>Respond</i>, <i>Merge</i>, <i>Stuck</i> (auto-merge stalled).
+        </li>
+      </ul>
+
+      <h3>How the turn moves</h3>
+      <ul>
+        <li>A reviewer submits a review: the author's turn. "Comment" reviews wait for the debounce first.</li>
+        <li>The author re-requests review: the reviewer's turn.</li>
+        <li>The author pushes after your comments or change requests: your turn again, once the push settles for the debounce period. You can turn this off in Settings.</li>
+        <li>Someone @mentions or assigns you: your turn until you respond.</li>
+        <li>Drafts, PRs set to auto-merge, and closed PRs are nobody's turn. On any other PR, if nobody else has the turn (say no reviewers are requested yet), the author does.</li>
+      </ul>
+
+      <h3>Actions</h3>
+      <ul>
+        <li><b>✕</b> dismisses a PR into <i>Dismissed</i>. It gets a blue dot on new activity. Use <i>Restore</i> to bring it back.</li>
+        <li><b>⋯</b> → <i>Not my turn</i> takes you out of the attention set until someone else reviews, comments or pushes, then puts you back. It also mutes a repo or a whole owner (unmute in Settings).</li>
+        <li><b>◐</b> switches the theme: System (follows your OS), Light, or Dark.</li>
+        <li>While a Critique tab is open, you get a browser notification when a PR becomes your turn. The tab title and icon show the count.</li>
+      </ul>
+
+      <h3>Reviewing in Critique</h3>
+      <ul>
+        <li><b>±</b> on a PR, or its blue "since your review" link, opens the review in a side panel. Drag its edge to resize; <kbd>Esc</kbd> or Back closes it. Cmd/Ctrl-click opens it in a new tab instead.</li>
+        <li><i>Whole PR</i> shows everything; <i>Since your review</i> shows only what changed after your last review. Or compare any two versions with the dropdowns. If the branch was rebased in between, it compares each file the PR touches, so the base branch's changes stay out.</li>
+        <li>Files are grouped into <i>Changes</i>, then <i>Tests</i>, then <i>Generated</i> (from the repo's <code>linguist-generated</code> rules in <code>.gitattributes</code>, plus common patterns like lockfiles). <i>Tree</i>/<i>Flat</i> switches the list layout; a folder or section checkbox marks everything in it viewed.</li>
+        <li>Check <i>Viewed</i> on a file to collapse it. If the file changes later, it un-checks itself and is marked <i>Changed since you viewed</i>.</li>
+        <li>GitHub comment threads show on their lines. Threads waiting on your reply are red, here and on the dashboard. Reply on GitHub.</li>
+      </ul>
+
+      <h3>Keyboard</h3>
+      <p><kbd>/</kbd> filter &nbsp; <kbd>?</kbd> this guide &nbsp; <kbd>Esc</kbd> close</p>
+    </dialog>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

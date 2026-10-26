@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Review · Critique</title>
+    <link rel="icon" href="data:," />
+    <script>
+      // Apply the saved theme before first paint (see theme.js).
+      try {
+        const t = JSON.parse(localStorage.getItem('critique.theme'));
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/review.css" />
+  </head>
+  <body class="review-page">
+    <header>
+      <h1><a href="/" title="Back to dashboard">Critique</a></h1>
+      <div id="pr-heading" class="pr-heading muted">Loading…</div>
+      <span class="spacer"></span>
+      <a id="github-link" class="button" target="_blank" rel="noopener" hidden>Open on GitHub</a>
+      <span id="theme-slot"></span>
+    </header>
+    <div id="toolbar" class="toolbar"></div>
+    <div id="banners"></div>
+    <div class="review-layout">
+      <aside id="sidebar" class="sidebar"></aside>
+      <div id="viewer" class="viewer"></div>
+    </div>
+    <div id="conversation" class="conversation" hidden></div>
+    <script type="module" src="/build/review.js"></script>
+  </body>
+</html>
