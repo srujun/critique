@@ -16,7 +16,10 @@
     "set-token": "node scripts/set-token.js",
     "test": "vitest run",
     "app:dev": "npm run build --silent && electron .",
-    "app": "npm run build --silent && node scripts/make-icons.js && electron-builder --mac dir && codesign --force --deep --sign - dist/mac-arm64/Critique.app"
+    "app": "npm run build --silent && node scripts/make-icons.js && electron-builder --mac dir && codesign --force --deep --sign - dist/mac-arm64/Critique.app",
+    "demo": "npm run build --silent && node demo/server.js --open",
+    "demo:app": "npm run build --silent && electron demo/app.js",
+    "screenshots": "npm run build --silent && electron demo/screenshots.js"
   },
   "devDependencies": {
     "@pierre/diffs": "1.5.2",
